@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -28,6 +29,11 @@ func main() {
 	body, err := io.ReadAll(response.Body)
 	handleError(err)
 	err = json.Unmarshal(body, &exchange)
+	handleError(err)
+	file, err := os.Create("cotacao.txt")
+	handleError(err)
+	defer file.Close()
+	_, err = file.Write([]byte("Dólar: " + exchange.Bid))
 	handleError(err)
 	log.Println("Exchange: ", exchange.Bid)
 }
